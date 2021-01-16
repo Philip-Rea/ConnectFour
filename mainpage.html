@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<!--Philip Rea, 30002832, B02-->
+<html>
+<head>
+    <title>Connect Four</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@900&family=Nunito:ital,wght@0,400;1,600&display=swap" rel="stylesheet">
+    <style>
+
+        :root {
+            --BACKGROUND_COLOUR: #2D2D2D;
+            --TEXT_COLOUR: white;
+            --GRID_COLOUR: black;
+            --PLAYER1_COLOUR: olive;
+            --PLAYER2_COLOUR: darkred;
+        }
+
+        [data-theme="normal"] {
+            --BACKGROUND_COLOUR: white;
+            --TEXT_COLOUR: black;
+            --GRID_COLOUR: royalblue;
+            --PLAYER1_COLOUR: yellow;
+            --PLAYER2_COLOUR: red;
+        }
+
+        [data-theme="dark"] {
+            --BACKGROUND_COLOUR: #2D2D2D;
+            --TEXT_COLOUR: white;
+            --GRID_COLOUR: black;
+            --PLAYER1_COLOUR: olive;
+            --PLAYER2_COLOUR: darkred;
+        }
+
+        [data-theme="colourful"] {
+            --BACKGROUND_COLOUR: lightsalmon;
+            --TEXT_COLOUR: purple;
+            --GRID_COLOUR: royalblue;
+            --PLAYER1_COLOUR: aquamarine;
+            --PLAYER2_COLOUR: fuchsia ; 
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 40px;
+            font-family: 'Nunito', sans-serif;
+            margin: 10px;
+        }
+
+        body {
+            background-color: var(--BACKGROUND_COLOUR);
+            color: var(--TEXT_COLOUR);
+        }
+
+        .main-div {
+            margin-left: 3%;
+            margin-right: 3%;
+            margin-top: 5px;
+            overflow: hidden;
+            height: 100%;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: 2fr 2fr;
+            grid-template-rows: auto 2fr auto;
+            grid-gap: 5px;
+            margin-left: auto;
+        }
+
+        .welcome {
+            grid-column: 1 / 3;
+            grid-row: 1 / 2;
+            padding: .5%;
+            text-align: center;
+            font-family: 'Nunito', sans-serif;
+        }
+
+        #welcomeM {
+            font-size: 18px;
+        }
+
+        .gameCodeDiv {
+            grid-column: 1 / 2;
+            grid-row: 2 / 4;
+            font-family: 'Nunito', sans-serif;
+        }
+
+        #newGameMessage {
+            width: 60%;
+            margin: 3%;
+            padding: 5px;
+            border: 2px solid var(--TEXT_COLOUR);
+            border-radius: 10px;
+            text-align: center;
+            float: right;
+        }
+
+        #gameCode {
+            font-size: 24px;
+            color: red;
+        }
+
+        #RandomGame {
+            font-size: 24px;
+            font-family: 'Lato', sans-serif;
+            padding: 5px;
+            color: var(--TEXT_COLOUR);
+            background-color: #379634;
+            border: 3px outset #379634;
+        }
+
+        button:hover {
+            cursor: pointer;
+        }
+
+        .joinGameDiv {
+            grid-column: 2 / 3;
+            grid-row: 2 / 4;
+            font-family: 'Nunito', sans-serif;
+        }
+
+        #joinGameMessage {
+            width: 60%;
+            margin: 3%;
+            padding: 5px;
+            border: 2px solid var(--TEXT_COLOUR);
+            border-radius: 10px;
+            text-align: center;
+            float: left;
+        }
+
+        #inputGameCode {
+            font-size: 22px;
+            width: 50%;
+        }
+
+        #submitGameCode {
+            font-size: 22px;
+            font-family: 'Lato', sans-serif;
+            color: var(--TEXT_COLOUR);
+            padding: 5px;
+            margin: 10px;
+            background-color: #379634;
+            border: 3px outset #379634;
+        }
+
+        input {
+            background-color: var(--BACKGROUND_COLOUR);
+            color: var(--TEXT_COLOUR);
+            border: 1px solid var(--TEXT_COLOUR);
+            border-radius: 5px;
+        }
+
+        #themes {
+            clear: both;
+            width: 60%;
+            margin: 3%;
+            padding: 5px;
+            border: 2px solid var(--TEXT_COLOUR);
+            border-radius: 10px;
+            text-align: center;
+            font-size: 30px;
+            font-family: 'Nunito', sans-serif;
+            float: left;
+        }
+
+        #themeTitle {
+            margin: 0;
+        }
+
+        #uname {
+            width: 20%;
+        }
+
+        #SubmitUsername {
+            border: none;
+        }
+
+        input[type=submit]:hover {
+            cursor: pointer;
+        }
+
+        #colourfulTheme, #darkTheme, #normalTheme {
+            font-family: 'Lato', sans-serif;
+            font-size: 18px;
+            margin: 5px;
+            margin-top: 25px;
+            margin-bottom: 25px;
+            padding: 5px;
+            border: 1px outset var(--TEXT_COLOUR);
+        }
+
+        #darkTheme {
+            background-color: #2D2D2D;
+            color: white;
+        }
+
+        #colourfulTheme {
+            background-color: lightsalmon;
+            color: purple;
+        }
+
+        #turnMessage {
+            text-align: center;
+            font-family: 'Nunito', sans-serif;
+            grid-column: 1 / 3;
+            grid-row: 1 / 2;
+            margin-bottom: 15px;
+        }
+
+        #gameGrid {
+            display: grid;
+            grid-column: 1 / 3;
+            grid-row: 2 / 3;
+            border-radius: 10px;
+            border: 2px solid var(--TEXT_COLOUR);
+            text-align: center;
+            margin: auto;
+            background-color: var(--GRID_COLOUR);
+        }
+
+        #ingameThemes {
+            text-align: center;
+            grid-column: 1 / 3;
+            grid-row: 3 / 4;
+        }
+
+        .player1piece {
+            background-color: var(--PLAYER1_COLOUR);
+            border: 1px solid var(--TEXT_COLOUR);
+            border-radius: 50%;
+            margin: auto;
+        }
+
+        .player2piece {
+            background-color: var(--PLAYER2_COLOUR);
+            border: 1px solid var(--TEXT_COLOUR);
+            border-radius: 50%;
+            margin: auto;
+        }
+
+        .emptypiece {
+            background-color: var(--BACKGROUND_COLOUR);
+            border: 1px solid var(--TEXT_COLOUR);
+            border-radius: 50%;
+            margin: auto;
+        }
+
+    </style>
+</head>
+<body onresize="adjustGameGrid()">
+    <div class="main-div">
+        <h1>Connect Four</h1>
+        <div class="grid-container" id="main-grid">
+            <form class="welcome" action="">
+                <div id="welcomeM"></div><input type="text" id="uname"><input type="submit" id="SubmitUsername" value="Submit">
+            </form>
+            <div class="gameCodeDiv">
+                <div id="newGameMessage">
+                    <p>To start a new game give this code to your opponent:</p>
+                    <p id="gameCode"><b>123456789</b></p>
+                    <p>Your opponent must visit this site and enter your code. Your game will start once the opponent has entered your code!</p><br />
+                    <p>Alternatively, press this button to join a random game:</p>
+                    <button id="RandomGame" onclick="joinRandom()">Join Game!</button>
+                    <p>(Please wait for your opponent)</p>
+                </div>
+            </div>
+            <div class="joinGameDiv">
+                <div id="joinGameMessage">
+                    <p>To join your opponent enter their game code here:</p>
+                    <input type="text" id="inputGameCode"><input onClick="enterGameByCode()" type="submit" id="submitGameCode" value="Join!">
+                </div>
+                <div id="themes">
+                    <p id="themeTitle">Themes</p>
+                    <button onclick="switchTheme(this.id)" id="normalTheme">Normal</button><button onclick="switchTheme(this.id)" id="darkTheme">Dark</button><button onclick="switchTheme(this.id)" id="colourfulTheme">Colourful</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+    <script>
+        var socket = io();
+        var userName = "";
+        var oppName = "";
+        var playerNum = "";
+        var gGrid = [];
+        var gameGrid;           //div element
+        var activeGame = "";
+        var gameState;
+        var theTheme = "darkTheme";
+
+        function enterGameByCode() {
+            var code = document.querySelector('#inputGameCode').value;
+            socket.emit('join game with code', userName, code);
+        };
+
+        function generateWelcome(type) {
+            if (type == 0) {
+                message = "Welcome " + userName + "! You can change your username here:";
+            } else {
+                message = "Welcome back " + userName + "! You can change your username here:";
+            }
+            
+
+            return message;
+        }
+
+        class Cell {
+            constructor(h, w, row, col) {
+                this.height = h;
+                this.width = w;
+                this.r = w * 0.75 / 2;
+                this.row = row;
+                this.column = col;
+                this.owner = null;
+            }
+        }
+
+        function joinRandom() {
+            socket.emit('join random', userName);
+        }
+
+        function moveMade(r_c) {
+            var location = r_c.split('_');
+            gGrid[location[0]][location[1]].owner = playerNum;
+            socket.emit('move made', location[0], location[1], playerNum, activeGame);
+            if (playerNum == 1) {
+                drawCells(2);
+            } else drawCells(1);
+            
+        }
+
+        function adjustGameGrid() {
+            if (activeGame != "") {
+                var height = (window.innerHeight - $("h1").outerHeight(true) - $('#turnMessage').outerHeight(true))*0.75;
+                var width = (window.innerWidth - (window.innerWidth * 0.06))*0.9;
+                var cellH = Math.floor(height / 6);
+                var cellW = Math.floor(width / 7);
+
+                if (cellH < cellW) {
+                    cellW = cellH;
+                } else cellH = cellW;
+
+                gameGrid.style.gridTemplateColumns = cellW + "px " + cellW + "px " + cellW + "px " + cellW + "px " + cellW + "px " + cellW + "px " + cellW + "px";
+                gameGrid.style.gridTemplateRows = cellW + "px " + cellW + "px " + cellW + "px " + cellW + "px " + cellW + "px " + cellW + "px ";
+                for (var r = 0; r < 6; r++) {
+                    for (var c = 0; c < 7; c++) {
+                        gGrid[r][c].width = cellW;
+                        gGrid[r][c].height = cellH;
+                    }
+                }
+                drawCells(gameState);
+            }
+        }
+
+        function drawCells(state) {
+            gameState = state;
+            $(document).ready(function () {
+                $("#gameGrid").empty();
+            });
+
+            var message = document.querySelector('#turnMessage');
+            if (state == playerNum) {
+                message.innerText = "You are playing against " + oppName + ". " + userName + ", it is your turn!";
+            } else if(state != 0){
+                message.innerText = "You are playing against " + oppName + ", it is their turn!";
+            }
+
+            for (var r = 0; r < gGrid.length; r++) {
+                for (var c = 0; c < gGrid[r].length; c++) {
+                    var drawCell = document.createElement('div');
+                    var radius = (gGrid[r][c].width) * 0.8;
+                    drawCell.id = r + "_" + c;
+                    drawCell.style.gridColumn = (c + 1) + "/" + (c + 2);
+                    drawCell.style.gridRow = (r + 1) + "/" + (r + 2);
+                    drawCell.style.height = radius + "px";
+                    drawCell.style.width = radius + "px";
+
+                    if (gGrid[r][c].owner == null) {
+                        drawCell.className = "emptypiece";
+                    } else if (gGrid[r][c].owner == 1) {
+                        drawCell.className = "player1piece";
+                    } else if (gGrid[r][c].owner == 2) {
+                        drawCell.className = "player2piece";
+                    }
+
+                    if (r == 5 && state === playerNum && gGrid[r][c].owner == null) {
+                        drawCell.style.border = "3px solid green";
+                        drawCell.onclick = function () { moveMade(this.id); };
+                    } else if (state === playerNum && gGrid[r][c].owner == null && gGrid[r + 1][c].owner != null) {
+                        drawCell.style.border = "3px solid green";
+                        drawCell.onclick = function () { moveMade(this.id); };
+                    } else {
+                        drawCell.style.border = "1px solid var(--TEXT_COLOUR)";
+                    }
+                    gameGrid.appendChild(drawCell);
+
+                }
+            }
+        }
+
+        function startGame(p1, p2, state) {
+            var grid = document.querySelector('#main-grid');
+            $(document).ready(function () {
+                $("#main-grid").empty();
+            });
+            var message = document.createElement("div");
+            message.id = "turnMessage";
+            if (p1 == userName) {
+                oppName = p2;
+                playerNum = 1;
+            } else {
+                oppName = p1;
+                playerNum = 2;
+            }
+         
+            grid.appendChild(message);
+            document.querySelector('#main-grid').style.textAlign = "center";
+
+            var height = (window.innerHeight - $("h1").outerHeight(true) - $('#turnMessage').outerHeight(true))*0.75;
+            var width = (window.innerWidth - (window.innerWidth * 0.06))*0.9;
+            var cellH = Math.floor(height / 6);
+            var cellW = Math.floor(width / 7);
+
+            if (cellH < cellW) {
+                cellW = cellH;
+            } else cellH = cellW;
+
+            gameGrid = document.createElement("div");
+            gameGrid.id = "gameGrid";
+            grid.appendChild(gameGrid);
+
+            gameGrid.style.gridTemplateColumns = cellW + "px " + cellW + "px " + cellW + "px " + cellW + "px " + cellW + "px " + cellW + "px " + cellW + "px";
+            gameGrid.style.gridTemplateRows = cellW + "px " + cellW + "px " + cellW + "px " + cellW + "px " + cellW + "px " + cellW + "px ";
+
+            //setup grid
+            for (var r = 0; r < 6; r++) {
+                gGrid[r] = [];
+                for (var c = 0; c < 7; c++) {
+                    gGrid[r][c] = new Cell(cellH, cellW, r, c);
+                }
+            }
+
+            drawCells(state);
+
+            var themeDiv = document.createElement("div");
+            themeDiv.id = "ingameThemes";
+
+            var normal = document.createElement("button");
+            var dark = document.createElement("button");
+            var colourful = document.createElement("button");
+            normal.id = "normalTheme";
+            normal.innerText = "Normal";
+            normal.onclick = function () { switchTheme(this.id); };
+            dark.id = "darkTheme";
+            dark.innerText = "Dark";
+            dark.onclick = function () { switchTheme(this.id); };
+            colourful.id = "colourfulTheme";
+            colourful.innerText = "Colourful";
+            colourful.onclick = function () { switchTheme(this.id); };
+
+            grid.appendChild(themeDiv);
+            themeDiv.appendChild(normal);
+            themeDiv.appendChild(dark);
+            themeDiv.appendChild(colourful);
+
+
+        }
+
+        socket.on('start game', function (player1, player2, gameState, gamecode) {
+            if (player1 == userName || player2 == userName) {
+                activeGame = gamecode;
+                startGame(player1, player2, gameState);
+            }
+
+        });
+
+        socket.on('move made', function (game, r, c, player) {
+            if (game == activeGame && player != playerNum) {
+                gGrid[r][c].owner = player;
+                if (player == 1) {
+                    drawCells(2);
+                } else {
+                    drawCells(1);
+                }
+            }
+        });
+
+        socket.on('game won', function (game, winner) {
+            if (activeGame == game) {
+                var message = document.querySelector('#turnMessage');
+                if (winner == playerNum) {
+                    message.innerText = "Congratulations " + userName + "! You won against " + oppName + ". Reload the page to start a new game.";
+                } else {
+                    message.innerText = oppName + " has won the game! Reload the page to start a new game.";
+                }
+                drawCells(0);
+            }
+        });
+
+        socket.on('game draw', function (game) {
+            if (activeGame == game) {
+                var message = document.querySelector('#turnMessage');
+                message.innerText = "The game against " + oppName + " has ended in a draw! Reload the page to start a new game.";
+            }
+        });
+
+        socket.on('none Unique userName', function () {
+            alert("Sorry that name is taken.")
+        });
+           
+
+        function switchTheme(id) {
+            theTheme = id;
+            var themeCookie = userName + "Theme";
+            createCookie(themeCookie, id, 1);
+            if (id == 'darkTheme') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+            else if (id == 'normalTheme') {
+                document.documentElement.setAttribute('data-theme', 'normal');
+            }
+            else {
+                document.documentElement.setAttribute('data-theme', 'colourful');
+            }
+        }
+
+
+        $(function () {
+            $('form').submit(function (e) {
+                //e.preventDefault(); // prevents page reloading
+                var userName = document.querySelector("#uname").value;
+                socket.emit('change Username', userName);
+                return false;
+            });
+
+            socket.on('new User', function (username, gameCode) {
+                userName = username;
+                if (!checkCookie()) {
+                    document.querySelector("#uname").value = username;
+                    document.querySelector("#welcomeM").innerText = generateWelcome(0);
+                } 
+                document.querySelector("#gameCode").innerText = gameCode;
+            });
+
+            socket.on('change Username', function (username) {
+                document.querySelector("#uname").value = username;
+                userName = username;
+                document.querySelector("#welcomeM").innerText = generateWelcome(0);
+                createCookie("userName", userName, 1);
+                var userT = userName + "Theme";
+                createCookie(userT, theTheme, 1);
+            });
+
+        });
+
+        function createCookie(cookieName,cookieValue,daysToExpire){
+            var date = new Date();
+            date.setTime(date.getTime()+(daysToExpire*24*60*60*1000));
+            document.cookie = cookieName + "=" + cookieValue + "; expires=" + date.toGMTString();
+        }
+
+		function accessCookie(cookieName){
+            var name = cookieName + "=";
+            var allCookieArray = document.cookie.split(';');
+            console.log("List of cookies:");
+            for(var i=0; i<allCookieArray.length; i++) {
+                var temp = allCookieArray[i].trim();
+                console.log(temp);
+                if (temp.indexOf(name)==0) return temp.substring(name.length,temp.length);
+       	    }
+        	return "";
+        }
+
+		function checkCookie(){
+            var user = accessCookie("userName");
+            if (user != "") {
+                userName = user;
+                var userT = user + "Theme";
+                var theme = accessCookie(userT);
+                switchTheme(theme);
+                document.querySelector("#uname").value = userName;
+                document.querySelector("#welcomeM").innerText = generateWelcome(1);
+                return true;
+            } else {
+                createCookie("userName", userName, 1);
+                var userT = userName + "Theme";
+                createCookie(userT, theTheme, 1);
+                return false;
+            }
+        }
+
+    </script>
+
+</body>
+</html>

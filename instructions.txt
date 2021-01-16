@@ -1,0 +1,5 @@
+Philip Rea, 30002832, B02
+
+Chrome and Firefox tested.
+To run the application have node js installed and go to the directory containing the index.js file in cmd and run it using the "node index.js"
+To connect open Chrome or firefox and go to localhost:3000
